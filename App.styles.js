@@ -2,71 +2,62 @@ import { StyleSheet } from "react-native"
 
 const styles = StyleSheet.create({
     root: {
-        flexDirection: 'row',
-        width: 200,
-
+        flexDirection:'column',
         flex: 1,
-        flexWrap: 'wrap-reverse',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'pink',
+        padding: 10,
+        paddingTop: 30,
     },
 
-    text: {
+    title: {
         fontSize: 20,
-        color: 'white',
-    },
-
-    item1: {
-
-        flexBasis: '70%',
-        height: 700,
-        borderWidth: 2,
-        boderRadious: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#2a80b9',
-    },
-
-    item2: {
-        height: 300,
-        flexBasis: '40%',
-        borderWidth: 2,
-        boderRadious: 20,
-        backgroundColor: '#8f44ad',
-    },
-
-    item3: {
-        alignSelf: 'flex-start',
-        flexBasis: '40%',
-        height: 400,
-        borderWidth: 2,
-        boderRadious: 20,
-        alignItems: 'center',
-
-        backgroundColor: '#16a086',
-    },
-
-    item4: {
+        fontWeight: 'bold',
         alignSelf: 'stretch',
-        alignItems: 'center',
-        flex: 1,
-        backgroundColor: '#f1c40f',
     },
 
-    item5: {
-        alignSelf: 'stretch',
-        alignItems: 'center',
+    optionsContainer: {
         flex: 1,
-        backgroundColor: '#e77e23',
-    },
-    item6: {
-        alignSelf: 'stretch',
-        alignItems: 'center',
-        flex: 1,
-        backgroundColor: '#c1392b',
+        flexDirection:'row',
+        // fexWrap: su dung khi item vuot qua main axis cua container
+        flexWrap: 'wrap',
+        width: '100%',
+        justifyContent: 'space-between',
+
+        // alignContent: su dung khi co flexWrap, dieu chinh kich thuoc cua khong gian sau khi xuong dong theo cross axis
+        alignContent: 'space-between'
     },
 
+    optionContainer: {
+        //boder
+        borderWidth: 2,
+        borderColor: '#82c4e4',
+        borderRadius: 10,
+        borderBottomWidth: 4,
+
+        //size
+        height: '48%',
+        width: '48%',
+
+        //spacing
+        padding: 10,
+
+        // container layout
+        flexDirection: 'column',
+        alignItems: 'center',
+
+
+    },
+
+    optionImage: {
+        width: '100%',
+        //height: 
+        flex: 1,
+    },
+
+    optionText:{
+
+    },
 })
 
 export default styles
