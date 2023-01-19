@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     optionContainer: {
         //boder
         borderWidth: 2,
-        borderColor: '#82c4e4',
+        borderColor: 'lightgrey',
         borderRadius: 10,
         borderBottomWidth: 4,
 
