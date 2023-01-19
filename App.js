@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Text, View, ScrollView, Image, TextInput, StyleSheet } from 'react-native'
 import styles from './App.styles'
 import ImageOption from './src/Components/ImageOption'
 import question from './assets/images/oneQuestionWithOption'
 
 const App = () => {
-  console.log('Hello world');
+  const [selected, setSelected] = useState(null)
+  console.log('Re-render');
+  let handlePress = () => {
+    setSelected(true)
+  }
+
   return (
     <View style={styles.root}>
       <Text style={styles.title}>{question.question}</Text>
@@ -16,6 +21,8 @@ const App = () => {
               key={option.id}
               image={option.image}
               text={option.text}
+              isSelected={selected?.id === option.id}
+              onPress={() => {setSelected(option)}}
             />
           )
         }

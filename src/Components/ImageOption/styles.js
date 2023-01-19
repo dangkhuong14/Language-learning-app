@@ -29,8 +29,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
-    optionText:{
+    optionText: {
+        fontWeight: 'bold',
+    },
 
+    selectedContainer: {
+        backgroundColor: '#DDF4FE',
+        borderColor: '#81D5Fe',
+    },
+
+    selectedText:{
+        fontWeight: 'bold',
+        color: '#40BEF7'
     },
 })
 
