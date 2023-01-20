@@ -3,12 +3,14 @@ import { Text, View, ScrollView, Image, TextInput, StyleSheet } from 'react-nati
 import styles from './App.styles'
 import ImageOption from './src/Components/ImageOption'
 import question from './assets/images/oneQuestionWithOption'
+import Button from './src/Components/Button'
 
 const App = () => {
   const [selected, setSelected] = useState(null)
   console.log('Re-render');
-  let handlePress = () => {
-    setSelected(true)
+
+  let buttonHandler = () => {
+console.warn('button clicked');
   }
 
   return (
@@ -27,6 +29,11 @@ const App = () => {
           )
         }
       </View>
+      <Button 
+      text='Check'
+      disabled={!selected}
+      onPress={buttonHandler}
+      />
     </View>
   )
 }
