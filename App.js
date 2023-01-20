@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from 'react'
 import { View, Alert } from 'react-native'
 import styles from './App.styles'
-import questions from './assets/images/imageMulatipleChoiceQuestions'
+// import questions from './assets/images/imageMulatipleChoiceQuestions'
+// import questions from './assets/images/openEndedQuestions'
+import questions from './assets/images/allQuestions'
 import ImageMultipleChoiceQuestions from './src/Components/ImageMultipleChoiceQuestions'
+import OpenEndedQuestion from './src/Components/OpenEndedQuestion'
 
 const App = () => {
 
-  const [imageQuestionIndex, setImageQuestionIndex] = useState(0)
-  const [imageQuestion, setImageQuestion] = useState(questions[0])
+  const [questionIndex, setQuestionIndex] = useState(0)
+  const [question, setQuestion] = useState(questions[0])
 
   // Everytime the image question index changes, update the image question: use useEffect
   useEffect(() => {
-    if (imageQuestionIndex >= questions.length) {
+    if (questionIndex >= questions.length) {
       Alert.alert('You won!')
-      setImageQuestionIndex(0)
+      setQuestionIndex(0)
     }
     else {
-      setImageQuestion(questions[imageQuestionIndex])
+      setQuestion(questions[questionIndex])
     }
-  }, [imageQuestionIndex])
+  }, [questionIndex])
 
   console.log('Re-render');
 
   let onCorrectAnswer = () => {
-    if(imageQuestionIndex === questions.length -1){
-      setImageQuestionIndex(imageQuestionIndex + 1)
-      return
-    }
-      
-    Alert.alert('Correct!')
-    setImageQuestionIndex(imageQuestionIndex + 1)
+    setQuestionIndex(questionIndex + 1)
   }
 
   let onWrongAnswer = () => {
@@ -38,11 +35,25 @@ const App = () => {
 
   return (
     <View style={styles.root}>
-      <ImageMultipleChoiceQuestions
-        question={imageQuestion}
-        onCorrectAnswer={onCorrectAnswer}
-        onWrongAnswer={onWrongAnswer}
-      />
+      {
+        question.type === 'IMAGE_MULTIPLE_CHOICE'
+        &&
+        <ImageMultipleChoiceQuestions
+          question={question}
+          onCorrectAnswer={onCorrectAnswer}
+          onWrongAnswer={onWrongAnswer}
+        />
+      }
+
+      {
+        question.type === 'OPEN_ENDED'
+        &&
+        <OpenEndedQuestion
+          question={question}
+          onCorrectAnswer={onCorrectAnswer}
+          onWrongAnswer={onWrongAnswer}
+        />
+      }
     </View>
   )
 }
