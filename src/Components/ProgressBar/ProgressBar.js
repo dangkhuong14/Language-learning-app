@@ -1,10 +1,10 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
-const ProgressBar = ({progress}) => {
+const ProgressBar = ({ progress }) => {
     return (
         <View style={styles.bg}>
-            <View style={[styles.fg, {width: `${progress * 100}%`}]}>
+            <View style={[styles.fg, { width: `${progress * 100}%` }]}>
                 <View style={[styles.highlight]}></View>
             </View>
         </View>
@@ -12,7 +12,7 @@ const ProgressBar = ({progress}) => {
 }
 
 const styles = StyleSheet.create({
-    bg:{
+    bg: {
         backgroundColor: 'lightgrey',
         flex: 1,
         height: 25,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
     },
 
-    highlight:{
+    highlight: {
         backgroundColor: '#FAD131',
         alignSelf: 'center',
         width: '90%',

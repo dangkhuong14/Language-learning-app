@@ -11,6 +11,9 @@ const App = () => {
   const [questionIndex, setQuestionIndex] = useState(0)
   const [question, setQuestion] = useState(questions[0])
 
+  // lives left of the user
+  const [lives, setLives] = useState(5)
+
   // Everytime the image question index changes, update the image question: use useEffect
   useEffect(() => {
     console.log('useEffect in app.js is called');
@@ -25,20 +28,39 @@ const App = () => {
 
   console.log('Re-render App component');
 
+  let restartGame = () => {
+    setLives(5),
+      setQuestionIndex(0)
+  }
+
   let onCorrectAnswer = () => {
     setQuestionIndex(questionIndex + 1)
   }
 
   let onWrongAnswer = () => {
-    Alert.alert('Please try another answer :<')
+    if (lives <= 1) {
+      setLives(0)
+      Alert.alert(
+        'Game over!',
+        'Please try again',
+        [{
+          text: 'Try again',
+          onPress: restartGame
+        }]
+      )
+    }
+    else {
+      Alert.alert('Please try another answer :<')
+      setLives(lives - 1)
+    }
   }
 
   return (
-    <Pressable 
+    <Pressable
       style={styles.root}
       onPress={() => Keyboard.dismiss()}
-      >
-        <Header progress={questionIndex/questions.length}/>
+    >
+      <Header progress={questionIndex / questions.length} lives={lives} />
       {
         question.type === 'IMAGE_MULTIPLE_CHOICE'
         &&
