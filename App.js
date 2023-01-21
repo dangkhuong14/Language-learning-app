@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Alert } from 'react-native'
+import { Pressable, Alert, Keyboard } from 'react-native'
 import styles from './App.styles'
 // import questions from './assets/images/imageMulatipleChoiceQuestions'
 // import questions from './assets/images/openEndedQuestions'
@@ -34,7 +34,10 @@ const App = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <Pressable 
+      style={styles.root}
+      onPress={() => Keyboard.dismiss()}
+      >
       {
         question.type === 'IMAGE_MULTIPLE_CHOICE'
         &&
@@ -54,7 +57,7 @@ const App = () => {
           onWrongAnswer={onWrongAnswer}
         />
       }
-    </View>
+    </Pressable>
   )
 }
 
