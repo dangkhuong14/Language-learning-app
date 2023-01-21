@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Pressable, Alert, Keyboard } from 'react-native'
 import styles from './App.styles'
-// import questions from './assets/images/imageMulatipleChoiceQuestions'
-// import questions from './assets/images/openEndedQuestions'
 import questions from './assets/images/allQuestions'
 import ImageMultipleChoiceQuestions from './src/Components/ImageMultipleChoiceQuestions'
 import OpenEndedQuestion from './src/Components/OpenEndedQuestion'
+import Header from './src/Components/Header/Header'
 
 const App = () => {
 
@@ -14,6 +13,7 @@ const App = () => {
 
   // Everytime the image question index changes, update the image question: use useEffect
   useEffect(() => {
+    console.log('useEffect in app.js is called');
     if (questionIndex >= questions.length) {
       Alert.alert('You won!')
       setQuestionIndex(0)
@@ -23,7 +23,7 @@ const App = () => {
     }
   }, [questionIndex])
 
-  console.log('Re-render');
+  console.log('Re-render App component');
 
   let onCorrectAnswer = () => {
     setQuestionIndex(questionIndex + 1)
@@ -38,6 +38,7 @@ const App = () => {
       style={styles.root}
       onPress={() => Keyboard.dismiss()}
       >
+        <Header progress={questionIndex/questions.length}/>
       {
         question.type === 'IMAGE_MULTIPLE_CHOICE'
         &&
