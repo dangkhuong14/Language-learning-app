@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, Alert, Keyboard } from 'react-native'
+import { Pressable, Alert, Keyboard, ActivityIndicator} from 'react-native'
 import styles from './App.styles'
 import questions from './assets/images/allQuestions'
 import ImageMultipleChoiceQuestions from './src/Components/ImageMultipleChoiceQuestions'
 import OpenEndedQuestion from './src/Components/OpenEndedQuestion'
 import Header from './src/Components/Header/Header'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
 
@@ -14,23 +15,58 @@ const App = () => {
   // lives left of the user
   const [lives, setLives] = useState(5)
 
-  // Everytime the image question index changes, update the image question: use useEffect
+  // check if data was loaded before save data at the first time
+  const [hasLoaded, setHasLoaded] = useState(false)
+
   useEffect(() => {
-    console.log('useEffect in app.js is called');
+    if(hasLoaded){
+      saveData()
+    }
+
     if (questionIndex >= questions.length) {
       Alert.alert('You won!')
       setQuestionIndex(0)
+      setLives(5)
     }
     else {
       setQuestion(questions[questionIndex])
     }
-  }, [questionIndex])
+  }, [questionIndex, lives])
 
-  console.log('Re-render App component');
+  useEffect(() => {
+    loadData()   
+  }, [])
+
+  const loadData = async () => {
+    try{
+      // load lives data
+      let storedLives = parseInt(await AsyncStorage.getItem('lives'))
+      // load current question index data
+      let storedQuestionIndex = parseInt(await AsyncStorage.getItem('questionIndex'))
+      if (storedQuestionIndex && storedLives){
+        setLives(storedLives)
+        setQuestionIndex(storedQuestionIndex)   
+      }
+      setHasLoaded(true)
+    }
+    catch(e) {
+      console.log(e);
+    }
+  }
+
+  const saveData = async () => {
+    try{
+      await AsyncStorage.setItem('lives', lives.toString())
+      await AsyncStorage.setItem('questionIndex', questionIndex.toString())
+    }
+    catch(e) {
+      console.log(e);
+    }
+  }
 
   let restartGame = () => {
     setLives(5),
-      setQuestionIndex(0)
+    setQuestionIndex(0)
   }
 
   let onCorrectAnswer = () => {
@@ -55,11 +91,15 @@ const App = () => {
     }
   }
 
+  if(!hasLoaded){
+    return <ActivityIndicator />
+  }
+
   return (
     <Pressable
       style={styles.root}
       onPress={() => Keyboard.dismiss()}
-    >
+    >   
       <Header progress={questionIndex / questions.length} lives={lives} />
       {
         question.type === 'IMAGE_MULTIPLE_CHOICE'
