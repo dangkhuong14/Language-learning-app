@@ -6,6 +6,8 @@ import ImageMultipleChoiceQuestions from './src/Components/ImageMultipleChoiceQu
 import OpenEndedQuestion from './src/Components/OpenEndedQuestion'
 import Header from './src/Components/Header/Header'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FillInBlankQuestion from './src/Components/FillInBlankQuestion'
+
 
 const App = () => {
 
@@ -120,6 +122,17 @@ const App = () => {
           onWrongAnswer={onWrongAnswer}
         />
       }
+
+      {
+        question.type === 'FILL_THE_BLANK'
+        &&
+        <FillInBlankQuestion 
+          question={question} 
+          onCorrectAnswer={onCorrectAnswer}
+          onWrongAnswer={onWrongAnswer}
+        />
+      }
+  
     </Pressable>
   )
 }
