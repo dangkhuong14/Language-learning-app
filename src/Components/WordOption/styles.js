@@ -5,6 +5,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
 
+    selectedText:{
+        color: 'lightgrey',       
+    },
+
     wordContainer: {
         justifyContent:'center',
         borderWidth: 2,
@@ -15,6 +19,10 @@ const styles = StyleSheet.create({
         marginHorizontal: 3,
         padding: 5,
         paddingHorizontal: 10
+    },
+
+    selectedWordContainer: {
+        backgroundColor: 'lightgrey'
     },
 })
 

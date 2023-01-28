@@ -22,6 +22,7 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
         // If current answer is wrong
         else{
             onWrongAnswer()
+            setSelectedOption(null)
         }
     }
     
@@ -67,6 +68,7 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
                             return (
                                 <WordOption 
                                     key={index}
+                                    isSelected={option.text === selectedOption?.text}
                                     word={option.text}
                                     onPress={() => onPressWordOption(option)}
                                 />

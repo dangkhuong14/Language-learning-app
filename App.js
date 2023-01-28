@@ -45,10 +45,13 @@ const App = () => {
       let storedLives = parseInt(await AsyncStorage.getItem('lives'))
       // load current question index data
       let storedQuestionIndex = parseInt(await AsyncStorage.getItem('questionIndex'))
-      if (storedQuestionIndex && storedLives){
-        setLives(storedLives)
+
+      if (storedQuestionIndex)    
         setQuestionIndex(storedQuestionIndex)   
-      }
+
+      if (storedLives)
+        setLives(storedLives)
+      
       setHasLoaded(true)
     }
     catch(e) {
