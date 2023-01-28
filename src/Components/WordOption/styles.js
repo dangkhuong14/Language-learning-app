@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     },
 
     selectedText:{
-        color: 'lightgrey',       
+        color: '#dbdbdb',       
     },
 
     wordContainer: {
@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
     },
 
     selectedWordContainer: {
-        backgroundColor: 'lightgrey'
+        backgroundColor: '#dbdbdb',
+        borderColor: '#dbdbdb'
     },
 })
 
