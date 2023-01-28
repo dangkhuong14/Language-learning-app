@@ -7,23 +7,24 @@ import WordOption from "../WordOption";
 import PropTypes from "prop-types";
 
 const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
-    const [selectedOptions, setSelectedOptions] = useState(null)
+    const [selectedOption, setSelectedOption] = useState(null)
+
+    const stringToArray = str => str.split(' ')
 
     const onPressWordOption = (option) => {
-        setSelectedOptions(option)
+        setSelectedOption(option)
     }
 
     const onPressCheckButton = (onCorrectAnswer, onWrongAnswer) => {
-        let currentAnswer = question.question.replace('_', `${selectedOptions.text}`)
         // If current answer is correct
-        if(currentAnswer === question.answer) {
+        if(selectedOption === question.answer) {
             onCorrectAnswer()
         }
         // If current answer is wrong
         else{
-            onWrongAnswer()
-            setSelectedOptions(null)
+            onWrongAnswer()          
         }
+        setSelectedOption(null)
     }
     
     return (
@@ -36,19 +37,19 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
 
                 <View style={styles.questionContainer}>
                 {
-                    question.question.split(' ').map((word, index) => {
-                        if (word !== '_')
+                    stringToArray(question.question).map((word, index) => {
+                        if (!word.includes('_'))
                             return <View key={index}>
                                 <Text style={styles.question}>{word} </Text>
                             </View>
                         return (
 
-                            selectedOptions 
+                            selectedOption 
                                 ? 
                                     <WordOption 
                                         key={index}
-                                        word={selectedOptions.text}
-                                        onPress={() => setSelectedOptions(null)}
+                                        word={selectedOption}
+                                        onPress={() => setSelectedOption(null)}
                                     />
                                 :
                                     <WordOption 
@@ -68,9 +69,9 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
                             return (
                                 <WordOption 
                                     key={index}
-                                    isSelected={option.text === selectedOptions?.text}
-                                    disable= {option.text === selectedOptions?.text}
-                                    word={option.text}
+                                    isSelected={option === selectedOption}
+                                    disable= {option === selectedOption}
+                                    word={option}
                                     onPress={() => onPressWordOption(option)}
                                 />
                             )
@@ -80,7 +81,7 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
 
             <Button
                 text='Check'
-                disabled={!selectedOptions}
+                disabled={!selectedOption}
                 onPress={() => onPressCheckButton(onCorrectAnswer, onWrongAnswer)}
             />
         </>
@@ -93,10 +94,7 @@ FillInBlankQuestion.propTypes = {
         type: PropTypes.string.isRequired,
         question: PropTypes.string.isRequired,
         answer: PropTypes.string.isRequired,
-        options: PropTypes.arrayOf(PropTypes.shape({
-            text: PropTypes.string.isRequired,
-            isBlank: PropTypes.bool
-        })).isRequired
+        options: PropTypes.arrayOf(PropTypes.string).isRequired
     }).isRequired,
     onCorrectAnswer: PropTypes.func,
     onWrongAnswer: PropTypes.func
