@@ -1,18 +1,31 @@
 export default [
   {
-    id: 'q0',
-    type: 'FILL_THE_BLANK',
-    question: 'una nina, una _',
-    options: ['yo', 'el', 'mujer', 'la'],
-    answer: 'mujer',
-  },
-
-  {
     id: 'q1',
     type: 'FILL_THE_BLANK',
-    question: 'una _ , una mujer',
-    options: ['yo', 'el', 'la', 'nina'],
-    answer: 'nina',
+    questionParts: [
+      {
+        text: 'una'
+      },
+
+      {
+        text: 'nina',
+        isBlank: true
+      },
+
+      {
+        text: ',',
+      },
+
+      {
+        text: 'una'
+      },
+
+      {
+        text: 'mujer',
+        isBlank: true
+      }
+    ],
+    options: ['nina', 'el', 'mujer', 'la'],
   },
 
   {
@@ -162,27 +175,4 @@ export default [
       },
     ],
   },
-  // {
-  //   id: "q7",
-  //   type: "FILL_IN_THE_BLANK",
-  //   parts: [
-  //     {
-  //       text: "la",
-  //       isBlank: true,
-  //     },
-  //     {
-  //       text: "nino",
-  //       isBlank: true,
-  //     },
-  //     {
-  //       text: "el",
-  //       isBlank: true,
-  //     },
-  //     {
-  //       text: "nina",
-  //       isBlank: true,
-  //     },
-  //   ],
-  //   options: ["la", "el", "nina", "nino", "ella"],
-  // },
 ];
