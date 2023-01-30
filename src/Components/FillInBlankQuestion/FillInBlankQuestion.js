@@ -1,77 +1,72 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { View, Pressable, Text, Image } from "react-native"
 import styles from './styles'
 import twogirls from '../../../assets/images/twogirls.png'
 import Button from '../Button'
 import WordOption from "../WordOption";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 
 const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
-    const [selectedOptions, setSelectedOptions] = useState([])
-
-    let numberOfBlanks = useRef(0)
-    
-    useEffect(() => {
-        numberOfBlanks.current = question.questionParts.filter(part => part.isBlank === true).length
-    }, [])
-
-    useEffect(() => {
-        console.log('selectedOptions:')
-        console.log( selectedOptions);
-
-    })
-
-    let optionsIndexToRender = -1
-
-    const stringToArray = str => str.split(' ')
+    const [parts, setParts] = useState(question.questionParts)
 
     const addOptionToSelectedOptions = (option) => {
-        return setSelectedOptions(options => {
-            let indexOfFirstNullOption = options.findIndex(item => item === null)
-            console.log('indexOfNull' + indexOfFirstNullOption);
-
-            if(indexOfFirstNullOption !== -1){
-                console.log('option' + option);
-                options[indexOfFirstNullOption] = option
-                return [...options]
+        for (let i = 0; i < parts.length; i++) {
+            if (parts[i].isBlank && !parts[i].selected) {
+                parts[i].selected = option
+                break
             }
-
-            if(options.length < numberOfBlanks.current){
-                
-                return [...options, option]
-            }
-            return options
-        })
+        }
+        return setParts([...parts])
     }
 
-    const uncheckWordOption = (word, e) => {
-        // console.log('word: ' + word);
-        // return setSelectedOptions(options => {
-        //     options.forEach((option, index) => {
-        //         if (option === word)
-        //             options[index] = null
-        //     })
-        //     console.log('options:');
-        //     console.log(options);
-        //     return [...options]
-        // })
-
-
-        console.log(e);
+    const uncheckWordOption = (index) => {
+        parts[index].selected = null
+        setParts([...parts])
     }
 
     const onPressCheckButton = (onCorrectAnswer, onWrongAnswer) => {
+        let isCorrect = true
+        parts.forEach(part => {
+            if (part.isBlank) {
+                if (part.selected !== part.text)
+                    isCorrect = false
+            }
+        })
         // If current answer is correct
-        if(selectedOption === question.answer) {
+        if (isCorrect) {
             onCorrectAnswer()
         }
         // If current answer is wrong
-        else{
-            onWrongAnswer()          
+        else {
+            onWrongAnswer()
         }
-        setSelectedOption(null)
+
+        parts.forEach(part => {
+            if (part.selected) {
+                delete part.selected
+            }
+        })
+
+        // Can not use setParts ?
+        // setParts(question.questionParts)
     }
-    
+
+    const checkIsSelected = (option) => {
+        let nSelectedOption = 0
+        parts.forEach(part => {
+            if (part.selected === option)
+                nSelectedOption++
+        })
+        if (nSelectedOption !== 0)
+            return true
+        else
+            return false
+    }
+
+    const ifAllBlanksFilled = () => {
+        return (parts.filter(part => part.selected).length === question.questionParts.filter(part => part.isBlank).length)
+    }
+
     return (
         <>
             <Text style={styles.title}>Complete the sentence</Text>
@@ -80,91 +75,79 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
                 style={styles.image}
             />
 
-                <View style={styles.questionContainer}>
+            <View style={styles.questionContainer}>
                 {
-                    question.questionParts.map((part, index) => {
-                        if (!part.isBlank)
-                        {
+                    parts.map((part, index) => {
+                        if (!part.isBlank) {
                             return (
                                 <View key={index}>
                                     <Text style={styles.question}>{part.text} </Text>
                                 </View>
                             )
                         }
-                        
-                        if (selectedOptions.length > 0 ){
-                            optionsIndexToRender = optionsIndexToRender + 1
-                            if (selectedOptions[optionsIndexToRender] === null){
-                                return (
-                                    <WordOption 
-                                        key={index}
-                                        word={'___'}
-                                        disable={true}
-                                    />
-                                )                        
-                            }
-                            return(
-                                <WordOption 
+
+                        if (part.selected) {
+                            return (<WordOption
+                                key={index}
+                                word={part.selected}
+                                onPress={() => uncheckWordOption(index)}
+                            />)
+                        }
+                        else {
+                            return (
+                                <WordOption
                                     key={index}
-                                    word={selectedOptions[optionsIndexToRender]}
-                                    onPress={(e) => uncheckWordOption(selectedOptions[optionsIndexToRender], e)}
+                                    word={'___'}
+                                    disable={true}
                                 />
                             )
                         }
+                    })
+                }
+            </View>
+
+            <View style={styles.optionContainer}>
+                {
+                    question.options.map((option, index) => {
                         return (
-                            <WordOption 
+                            <WordOption
                                 key={index}
-                                word={'___'}
-                                disable={true}
+                                isSelected={checkIsSelected(option)}
+                                disable={checkIsSelected(option)}
+                                word={option}
+                                onPress={() => addOptionToSelectedOptions(option)}
                             />
                         )
                     })
                 }
-                </View>
+            </View>
 
-                <View style={styles.optionContainer}>
-                    {
-                        question.options.map((option, index) => {
-                            return (
-                                <WordOption 
-                                    key={index}
-                                    isSelected={selectedOptions.includes(option)}
-                                    disable= {selectedOptions.includes(option)}
-                                    word={option}
-                                    onPress={() => addOptionToSelectedOptions(option)}
-                                />
-                            )
-                        })
-                    }
-                </View>
             <Button
                 text='Check'
-                disabled={!(selectedOptions.length === numberOfBlanks.current 
-                                && 
-                            selectedOptions.findIndex(option => option === null) === -1)}
+                disabled={!ifAllBlanksFilled()}
                 onPress={() => onPressCheckButton(onCorrectAnswer, onWrongAnswer)}
             />
         </>
     )
 }
 
-// FillInBlankQuestion.propTypes = {
-//     question: PropTypes.shape({
-//         id: PropTypes.string.isRequired,
-//         type: PropTypes.string.isRequired,
-//         questionParts: PropTypes.shape({
-//             text: PropTypes.string.isRequired,
-//             isBlank: PropTypes.bool
-//         }).isRequired,
-//         options: PropTypes.arrayOf(PropTypes.string).isRequired
-//     }).isRequired,
-//     onCorrectAnswer: PropTypes.func,
-//     onWrongAnswer: PropTypes.func
-// }
+FillInBlankQuestion.propTypes = {
+    question: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        questionParts: PropTypes.arrayOf(PropTypes.shape({
+            text: PropTypes.string.isRequired,
+            isBlank: PropTypes.bool
+        })).isRequired,
+        options: PropTypes.arrayOf(PropTypes.string).isRequired
+    }).isRequired,
+    onCorrectAnswer: PropTypes.func,
+    onWrongAnswer: PropTypes.func
+}
 
-// FillInBlankQuestion.defaultProps = {
-//     onCorrectAnswer: () => {},
-//     onWrongAnswer: () => {}
-// }
+FillInBlankQuestion.defaultProps = {
+    onCorrectAnswer: () => { },
+    onWrongAnswer: () => { }
+}
 
 export default FillInBlankQuestion
