@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Pressable, Text, Image } from "react-native"
 import styles from './styles'
 import twogirls from '../../../assets/images/twogirls.png'
@@ -9,7 +9,15 @@ import PropTypes from "prop-types";
 const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
     const [parts, setParts] = useState(question.questionParts)
 
+    useEffect(() => {
+        deleteSelectedProperty(question.questionParts)
+        setParts(question.questionParts)
+    }, [question])
+
     const addOptionToSelectedOptions = (option) => {
+        if (ifAllBlanksFilled())
+            return
+
         for (let i = 0; i < parts.length; i++) {
             if (parts[i].isBlank && !parts[i].selected) {
                 parts[i].selected = option
@@ -24,6 +32,13 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
         setParts([...parts])
     }
 
+    const deleteSelectedProperty = (arr) => {
+        arr.forEach(item => {  
+            delete item.selected  
+        })
+    }
+
+    
     const onPressCheckButton = (onCorrectAnswer, onWrongAnswer) => {
         let isCorrect = true
         parts.forEach(part => {
@@ -34,21 +49,14 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
         })
         // If current answer is correct
         if (isCorrect) {
-            onCorrectAnswer()
+            onCorrectAnswer()      
         }
         // If current answer is wrong
         else {
             onWrongAnswer()
         }
-
-        parts.forEach(part => {
-            if (part.selected) {
-                delete part.selected
-            }
-        })
-
-        // Can not use setParts ?
-        // setParts(question.questionParts)
+        // Can not use setParts(question.questionParts)?: parts is reference to question.questionParts, so they have same value
+        // setParts(existingParts => [...existingParts ].map(p => ({...p, selected: null})));
     }
 
     const checkIsSelected = (option) => {
@@ -63,9 +71,7 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
             return false
     }
 
-    const ifAllBlanksFilled = () => {
-        return (parts.filter(part => part.selected).length === question.questionParts.filter(part => part.isBlank).length)
-    }
+    const ifAllBlanksFilled = () => parts.filter(part => part.isBlank && !part.selected).length === 0
 
     return (
         <>

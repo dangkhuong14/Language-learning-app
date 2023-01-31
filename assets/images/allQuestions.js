@@ -1,5 +1,35 @@
 export default [
   {
+    id: 'q0',
+    type: 'FILL_THE_BLANK',
+    questionParts: [
+      {
+        text: 'la'
+      },
+
+      {
+        text: 'nino',
+        isBlank: true
+      },
+
+      {
+        text: ',',
+      },
+
+      {
+        text: 'el',
+        isBlank: true
+      },
+
+      {
+        text: 'nina',
+        isBlank: true
+      }
+    ],
+    options: ['nina', 'el', 'mujer', 'la', 'nino'],
+  },
+  
+  {
     id: 'q1',
     type: 'FILL_THE_BLANK',
     questionParts: [
@@ -9,7 +39,6 @@ export default [
 
       {
         text: 'nina',
-        isBlank: true
       },
 
       {
@@ -25,7 +54,7 @@ export default [
         isBlank: true
       }
     ],
-    options: ['nina', 'el', 'mujer', 'la'],
+    options: ['es', 'el', 'mujer', 'la'],
   },
 
   {
