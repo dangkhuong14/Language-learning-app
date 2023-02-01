@@ -131,6 +131,7 @@ const App = () => {
         &&
         <FillInBlankQuestion 
           question={question} 
+          isOnLastLiveOfFirstQuestion={questionIndex === 0 && lives <=1}
           onCorrectAnswer={onCorrectAnswer}
           onWrongAnswer={onWrongAnswer}
         />

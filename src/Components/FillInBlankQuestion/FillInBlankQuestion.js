@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Pressable, Text, Image } from "react-native"
+import { View, Text, Image } from "react-native"
 import styles from './styles'
 import twogirls from '../../../assets/images/twogirls.png'
 import Button from '../Button'
 import WordOption from "../WordOption";
 import PropTypes from "prop-types";
 
-const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
+const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer, isOnLastLiveOfFirstQuestion }) => {
     const [parts, setParts] = useState(question.questionParts)
 
     useEffect(() => {
-        deleteSelectedProperty(question.questionParts)
         setParts(question.questionParts)
     }, [question])
 
@@ -18,27 +17,24 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
         if (ifAllBlanksFilled())
             return
 
-        for (let i = 0; i < parts.length; i++) {
-            if (parts[i].isBlank && !parts[i].selected) {
-                parts[i].selected = option
-                break
+        let isModified = false
+        setParts(existingParts => existingParts.map(part => {
+            if (part.isBlank && !part.selected && !isModified) {
+                isModified = true
+                return { ...part, selected: option }
             }
-        }
-        return setParts([...parts])
+            return { ...part }
+        }))
     }
 
-    const uncheckWordOption = (index) => {
-        parts[index].selected = null
-        setParts([...parts])
+    const uncheckWordOption = (selected) => {
+        setParts(existingParts => existingParts.map(part => {
+            if (part.selected === selected)
+                return { ...part, selected: null }
+            return { ...part }
+        }))
     }
 
-    const deleteSelectedProperty = (arr) => {
-        arr.forEach(item => {  
-            delete item.selected  
-        })
-    }
-
-    
     const onPressCheckButton = (onCorrectAnswer, onWrongAnswer) => {
         let isCorrect = true
         parts.forEach(part => {
@@ -49,14 +45,14 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
         })
         // If current answer is correct
         if (isCorrect) {
-            onCorrectAnswer()      
+            onCorrectAnswer()
         }
         // If current answer is wrong
         else {
             onWrongAnswer()
+            if (isOnLastLiveOfFirstQuestion)
+                setParts([...question.questionParts])
         }
-        // Can not use setParts(question.questionParts)?: parts is reference to question.questionParts, so they have same value
-        // setParts(existingParts => [...existingParts ].map(p => ({...p, selected: null})));
     }
 
     const checkIsSelected = (option) => {
@@ -96,7 +92,7 @@ const FillInBlankQuestion = ({ question, onCorrectAnswer, onWrongAnswer }) => {
                             return (<WordOption
                                 key={index}
                                 word={part.selected}
-                                onPress={() => uncheckWordOption(index)}
+                                onPress={() => uncheckWordOption(part.selected)}
                             />)
                         }
                         else {
@@ -148,12 +144,14 @@ FillInBlankQuestion.propTypes = {
         options: PropTypes.arrayOf(PropTypes.string).isRequired
     }).isRequired,
     onCorrectAnswer: PropTypes.func,
-    onWrongAnswer: PropTypes.func
+    onWrongAnswer: PropTypes.func,
+    isOnLastLiveOfFirstQuestion: PropTypes.bool
 }
 
 FillInBlankQuestion.defaultProps = {
     onCorrectAnswer: () => { },
-    onWrongAnswer: () => { }
+    onWrongAnswer: () => { },
+    isOnLastLiveOfFirstQuestion: false
 }
 
 export default FillInBlankQuestion
